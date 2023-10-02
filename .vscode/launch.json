@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dotnet: build",
+            "program": "${workspaceFolder}Example//bin/Debug/net7.0/Example.dll",
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "env": {
+                "BLADE_SKIP_INTO": "1",
+                "BLADE_NO_SOUND": "1"
+            }
+        }
+    ],
+    "compounds": []
+}
