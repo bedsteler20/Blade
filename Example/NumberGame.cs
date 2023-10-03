@@ -38,8 +38,8 @@ public class Game : Blade.Screen {
 
     protected override void OnDraw(SKCanvas canvas) {
         base.OnDraw(canvas);
-        canvas.Center(WIDTH, HEIGHT);
-        
+        canvas.CenterScreen(WIDTH, HEIGHT);
+
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
                 canvas.DrawDrawable(Cells[x][y], x * (Cell.SIZE + CELL_PADDING), y * (Cell.SIZE + CELL_PADDING));
