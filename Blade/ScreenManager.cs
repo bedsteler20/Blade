@@ -11,6 +11,7 @@ public static class ScreenManager {
     /// </summary>
     public static Screen CurrentScreen => screens.Peek();
 
+
     /// <summary>
     /// Adds a screen to the top of the screen stack.
     /// </summary>

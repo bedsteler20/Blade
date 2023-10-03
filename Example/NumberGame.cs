@@ -1,13 +1,16 @@
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkiaSharp;
-
+using Blade.Colors;
+using Blade.Extensions;
 namespace Example.NumberGame;
 public class Game : Blade.Screen {
 
     private const int BOARD_SIZE = 4;
-    private const int WIDTH = 50;
-    private const int HEIGHT = 18;
+    private const int CELL_PADDING = 10;
+
+    public const int WIDTH = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
+    public const int HEIGHT = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
 
     private readonly Cell[][] Cells;
     private readonly Random Rng = new();
@@ -27,17 +30,23 @@ public class Game : Blade.Screen {
         SpawnCell();
     }
 
+    private static SKPaint scorePaint = new() {
+        Color = Catppuccin.Text,
+        IsAntialias = true,
+        TextSize = 32
+    };
+
     protected override void OnDraw(SKCanvas canvas) {
         base.OnDraw(canvas);
-        canvas.DrawText($"Score: {score}", 0, 0, new SKPaint() {
-            Color = SKColors.White,
-            TextSize = 32
-        });
+        canvas.Center(WIDTH, HEIGHT);
+        
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
-                Cells[x][y].Draw(canvas, x * 110, y * 110);
+                canvas.DrawDrawable(Cells[x][y], x * (Cell.SIZE + CELL_PADDING), y * (Cell.SIZE + CELL_PADDING));
             }
         }
+        canvas.Translate(0, -10);
+        canvas.DrawText($"Score: {score}", 0, 0, scorePaint);
     }
 
     public override void OnKeyDown(KeyboardKeyEventArgs e) {
@@ -49,13 +58,10 @@ public class Game : Blade.Screen {
             case Keys.Down:
                 MoveDown();
                 AfterMove();
-
-
                 break;
             case Keys.Left:
                 MoveLeft();
                 AfterMove();
-
                 break;
             case Keys.Right:
                 MoveRight();
@@ -277,10 +283,10 @@ public class Game : Blade.Screen {
 }
 
 public class Cell : Blade.GameObject {
-    private const int SIZE = 100;
-    private const int TEXT_WIDTH = 40;
+    public const int SIZE = 100;
     private const int TEXT_HEIGHT = 60;
     private const int TEXT_SIZE = 32;
+    private const int BORDER_RADIUS = 10;
     private int _value;
 
     public int Value {
@@ -291,30 +297,37 @@ public class Cell : Blade.GameObject {
         }
     }
 
+    protected override SKRect OnGetBounds() {
+        return new(SIZE, 0, SIZE, 0);
+    }
+
+
     private SKColor BackgroundColor => Value switch {
-        0 => SKColors.Black,
-        2 => SKColors.Yellow,
-        4 => SKColors.Red,
-        8 => SKColors.Green,
-        16 => SKColors.Blue,
-        32 => SKColors.Magenta,
-        64 => SKColors.Cyan,
-        128 => SKColors.Gray,
-        256 => SKColors.SlateBlue,
-        512 => SKColors.Orange,
-        1024 => SKColors.DarkGreen,
-        2048 => SKColors.DarkBlue,
-        _ => SKColors.Black
+        0 => Catppuccin.Surface0,
+        2 => Catppuccin.Yellow,
+        4 => Catppuccin.Red,
+        8 => Catppuccin.Green,
+        16 => Catppuccin.Blue,
+        32 => Catppuccin.Lavender,
+        64 => Catppuccin.Peach,
+        128 => Catppuccin.Sky,
+        256 => Catppuccin.Maroon,
+        512 => Catppuccin.Sapphire,
+        1024 => Catppuccin.Pink,
+        2048 => Catppuccin.Mauve,
+        _ => Catppuccin.Rosewater
     };
 
     private readonly SKPaint BackgroundPaint = new() {
-        Color = SKColor.Empty,
-        Style = SKPaintStyle.Fill
+        Color = Catppuccin.Empty,
+        Style = SKPaintStyle.Fill,
     };
 
     private static SKPaint TextPaint => new() {
-        Color = SKColors.Black,
+        Color = Catppuccin.Surface0,
         Style = SKPaintStyle.Fill,
+        TextAlign = SKTextAlign.Center,
+        IsAntialias = true,
         TextSize = TEXT_SIZE
     };
 
@@ -330,8 +343,8 @@ public class Cell : Blade.GameObject {
 
     protected override void OnDraw(SKCanvas canvas) {
         base.OnDraw(canvas);
-        canvas.DrawRect(0, 0, SIZE, SIZE, BackgroundPaint);
-        canvas.DrawText(Value.ToString(), TEXT_WIDTH, TEXT_HEIGHT, TextPaint);
+        canvas.DrawRoundRect(0, 0, SIZE, SIZE, BORDER_RADIUS, BORDER_RADIUS, BackgroundPaint);
+        canvas.DrawText(Value.ToString(), 50, TEXT_HEIGHT, TextPaint);
 
     }
 

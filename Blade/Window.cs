@@ -1,3 +1,4 @@
+using Blade.Colors;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -12,6 +13,11 @@ public class Window : GameWindow {
     SKCanvas canvas;
     GRBackendRenderTarget renderTarget;
 
+    public static Window CurrentWindow { get; private set; }
+
+    public int Width => ClientSize.X;
+    public int Height => ClientSize.Y;
+
     public Window(string title, int width, int height) : base(new GameWindowSettings {
         UpdateFrequency = 60
     },
@@ -24,6 +30,7 @@ public class Window : GameWindow {
          Size = new Vector2i(width, height)
      }) {
         VSync = VSyncMode.Off;
+        CurrentWindow = this;
     }
 
     protected override void OnLoad() {
@@ -56,7 +63,7 @@ public class Window : GameWindow {
 
     protected override void OnRenderFrame(FrameEventArgs args) {
         base.OnRenderFrame(args);
-        canvas.Clear(SKColors.SlateGray);
+        canvas.Clear(Catppuccin.Base);
         ScreenManager.CurrentScreen.Draw(canvas, 0, 0);
         canvas.Flush();
         SwapBuffers();
