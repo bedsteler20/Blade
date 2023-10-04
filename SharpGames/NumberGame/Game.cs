@@ -30,9 +30,10 @@ public class Game : Blade.GameScreen {
     }
 
     private static readonly SKPaint scorePaint = new() {
-        Color = CatppuccinMocha.Text,
+        Color = Catppuccin.Text,
         IsAntialias = true,
-        TextSize = 32
+        TextSize = 32,
+        Typeface = Catppuccin.Font
     };
 
     protected override void OnDraw(SKCanvas canvas) {

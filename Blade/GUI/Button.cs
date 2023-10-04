@@ -8,27 +8,36 @@ public class Button : GameObject {
     public required Action OnClick { get; init; }
     public int Width { get; set; } = 0;
     public int Height { get; set; } = 0;
+    public float TextHeight {
+        get => TextPaint.TextSize;
+        set {
+            TextPaint.TextSize = value;
+            TextSelectedPaint.TextSize = value;
+        }
+    }
     public bool IsFocused { get; set; } = false;
 
     private readonly SKPaint BackgroundPaint = new() {
-        Color = CatppuccinMocha.Overlay1,
+        Color = Catppuccin.Overlay1,
     };
 
     private readonly SKPaint TextPaint = new() {
-        Color = CatppuccinMocha.Surface1,
+        Color = Catppuccin.Surface1,
         TextAlign = SKTextAlign.Center,
         IsAntialias = true,
-        TextSize = 24
+        TextSize = 24,
+        Typeface = Catppuccin.Font
     };
 
     private readonly SKPaint BackgroundSelectedPaint = new() {
-        Color = CatppuccinMocha.Surface1,
+        Color = Catppuccin.Surface1,
     };
     private readonly SKPaint TextSelectedPaint = new() {
-        Color = CatppuccinMocha.Text,
+        Color = Catppuccin.Text,
         TextAlign = SKTextAlign.Center,
         IsAntialias = true,
-        TextSize = 24
+        TextSize = 24,
+        Typeface = Catppuccin.Font
     };
 
     protected override SKRect OnGetBounds() => new(Width, 0, 0, Height);

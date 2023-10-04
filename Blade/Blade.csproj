@@ -1,17 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="LibVLCSharp" Version="3.8.0" />
-    <PackageReference Include="OpenTK" Version="4.8.1" />
-    <PackageReference Include="SkiaSharp" Version="2.88.6" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.6" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.18" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="LibVLCSharp" Version="3.8.0" />
+        <PackageReference Include="OpenTK" Version="4.8.1" />
+        <PackageReference Include="SkiaSharp" Version="2.88.6" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.6" />
+        <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.18" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="Assets/Colors/*.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets/Fonts/*.ttf">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
 </Project>

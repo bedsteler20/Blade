@@ -7,24 +7,21 @@ namespace SharpGames;
 
 class Program {
     public static void Main() {
-        Dictionary<string, uint> pairs = new() {
-            ["Rosewater"] = 0xfff5e0dc
-        };
-        Console.WriteLine(JsonSerializer.Serialize(pairs));
+        Catppuccin.Initialize();
         var numberGameLeaderboard = new Leaderboard("2048");
         var snakeLeaderboard = new Leaderboard("Snake");
 
         var menu = new Menu {
             Title = "Main Menu",
             Route = Routes.MainMenu,
-            BackgroundColor = CatppuccinMocha.Pink,
+            BackgroundColor = Catppuccin.Pink,
             Buttons = new[] {
                 new Button {
                     Text = "2048",
                     OnClick = () => ScreenManager.AddScreen(new Menu() {
                         Title = "2048",
                         Route = Routes.NumbersGameMenu,
-                        BackgroundColor = CatppuccinMocha.Yellow,
+                        BackgroundColor = Catppuccin.Yellow,
                         Buttons = new[] {
                             new Button {
                                 Text = "Play",
@@ -34,15 +31,29 @@ class Program {
                                     OnExit = () => ScreenManager.AddScreen(new ConfirmDialog {
                                         Message = "Exit Game?",
                                         Route = Routes.NumbersGameExitConfirm,
-                                        BackgroundColor = CatppuccinMocha.Yellow,
-                                        TextColor = CatppuccinMocha.Base,
-                                        ConfirmAction = () => ScreenManager.Back(Routes.NumbersGameMenu),
-                                        CancelAction = () => ScreenManager.Back(Routes.NumbersGame),
+                                        BackgroundColor = Catppuccin.Yellow,
+                                        TextColor = Catppuccin.Base,
+                                        CancelAction  = () => ScreenManager.Back(Routes.NumbersGameMenu),
+                                        ConfirmAction = () => ScreenManager.Back(Routes.NumbersGame),
                                         ConfirmText = "Yes",
                                         CancelText = "No"
                                     }),
-                                    OnGameOver = (score) => { }
-                                })
+                                    OnGameOver = (score) => ScreenManager.AddScreen(new GameOver {
+                                        Route = Routes.NumbersGameOver,
+                                        OnEnd = () => new TextBox {
+                                            Route = Routes.NumbersGameName,
+                                            Title = "Enter your name",
+                                            BackgroundColor = Catppuccin.Yellow,
+                                            CancelText = "Cancel",
+                                            SubmitText = "Submit",
+                                            TextColor = Catppuccin.Base,
+                                            OnCancel = () => ScreenManager.Back(Routes.NumbersGameMenu),
+                                            OnSubmit = (name) => {
+                                                snakeLeaderboard.AddScore(name, score);
+                                                ScreenManager.Back(Routes.NumbersGameMenu);
+                                            }
+                                        },
+                                    })                                })
                             },
                             new Button {
                                 Text = "Leaderboard",
@@ -50,9 +61,9 @@ class Program {
                                     Title = "Leaderboard",
                                     Route = Routes.NumbersGameScores,
                                     Data = numberGameLeaderboard.GetData(),
-                                    HeaderTextColor = CatppuccinMocha.Base,
-                                    BodyTextColor = CatppuccinMocha.Text,
-                                    BackgroundColor = CatppuccinMocha.Yellow
+                                    HeaderTextColor = Catppuccin.Base,
+                                    BodyTextColor = Catppuccin.Text,
+                                    BackgroundColor = Catppuccin.Yellow
                                 })
                             },
                             new Button {
@@ -67,7 +78,7 @@ class Program {
                     OnClick = () => ScreenManager.AddScreen(new Menu() {
                         Title = "Snake",
                         Route = Routes.SnakeMenu,
-                        BackgroundColor = CatppuccinMocha.Green,
+                        BackgroundColor = Catppuccin.Green,
                         Buttons = new[] {
                             new Button {
                                 Text = "Play",
@@ -77,14 +88,30 @@ class Program {
                                     OnExit = () => ScreenManager.AddScreen(new ConfirmDialog {
                                         Message = "Exit Game?",
                                         Route = Routes.SnakeExitConfirm,
-                                        BackgroundColor = CatppuccinMocha.Green,
-                                        TextColor = CatppuccinMocha.Base,
+                                        BackgroundColor = Catppuccin.Green,
+                                        TextColor = Catppuccin.Base,
                                         ConfirmAction = () => ScreenManager.Back(Routes.SnakeMenu),
                                         CancelAction = () => ScreenManager.Back(Routes.SnakeGame),
                                         ConfirmText = "Yes",
                                         CancelText = "No"
                                     }),
-                                    OnGameOver = (score) => { }
+                                    OnGameOver = (score) => ScreenManager.AddScreen(new GameOver {
+                                        Route = Routes.SnakeOver,
+                                        OnEnd = () => ScreenManager.AddScreen(
+                                            new TextBox {
+                                                Route = Routes.SnakeName,
+                                                BackgroundColor = Catppuccin.Yellow,
+                                                Title = "Enter your name",
+                                                CancelText = "Cancel",
+                                                SubmitText = "Submit",
+                                                TextColor = Catppuccin.Base,
+                                                OnCancel = () => ScreenManager.Back(Routes.SnakeMenu),
+                                                OnSubmit = (name) => {
+                                                snakeLeaderboard.AddScore(name, score);
+                                                ScreenManager.Back(Routes.SnakeMenu);
+                                            }
+                                        })
+                                    })
                                 })
                             },
                             new Button {
@@ -93,9 +120,9 @@ class Program {
                                     Title = "Leaderboard",
                                     Route = Routes.SnakeScores,
                                     Data = snakeLeaderboard.GetData(),
-                                    HeaderTextColor = CatppuccinMocha.Base,
-                                    BodyTextColor = CatppuccinMocha.Text,
-                                    BackgroundColor = CatppuccinMocha.Green
+                                    HeaderTextColor = Catppuccin.Base,
+                                    BodyTextColor = Catppuccin.Text,
+                                    BackgroundColor = Catppuccin.Green
                                 })
                             },
                             new Button {
@@ -103,24 +130,37 @@ class Program {
                                 OnClick = () => ScreenManager.Back(Routes.MainMenu)
                             }
                         }
-                    })
+        })
                 },
                 new Button() {
-                    Text = "BreakOut",
-                    OnClick = () => {}
+        Text = "BreakOut",
+                    OnClick = () => { }
                 },
                 new Button() {
-                    Text = "Tetras",
-                    OnClick = () => {}
+        Text = "Tetras",
+                    OnClick = () => { }
                 },
                 new Button() {
-                    Text = "Exit",
+        Text = "Exit",
                     OnClick = () => Environment.Exit(0)
                 }
-            }
+}
         };
         var window = new Window("Blade", 800, 600);
-        ScreenManager.AddScreen(menu);
+        // ScreenManager.AddScreen(menu);
+        ScreenManager.AddScreen(new TextBox {
+            Route = Routes.SnakeName,
+            BackgroundColor = Catppuccin.Yellow,
+            Title = "Enter your name",
+            CancelText = "Cancel",
+            SubmitText = "Submit",
+            TextColor = Catppuccin.Base,
+            OnCancel = () => ScreenManager.Back(Routes.SnakeMenu),
+            OnSubmit = (name) => {
+                snakeLeaderboard.AddScore(name, 1);
+                ScreenManager.Back(Routes.SnakeMenu);
+            }
+        });
         window.Run();
     }
 }

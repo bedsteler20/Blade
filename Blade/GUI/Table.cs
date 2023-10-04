@@ -43,7 +43,7 @@ public class Table : Screen {
 
 
     private readonly SKPaint InnerPaint = new() {
-        Color = CatppuccinMocha.Surface1,
+        Color = Catppuccin.Surface1,
         Style = SKPaintStyle.Fill,
     };
 
@@ -55,18 +55,21 @@ public class Table : Screen {
         TextAlign = SKTextAlign.Left,
         IsAntialias = true,
         TextSize = TEXT_SIZE,
+        Typeface = Catppuccin.Font
     };
 
     private readonly SKPaint TextPaintR = new() {
         TextAlign = SKTextAlign.Right,
         IsAntialias = true,
         TextSize = TEXT_SIZE,
+        Typeface = Catppuccin.Font
     };
 
     private readonly SKPaint HeaderPaint = new() {
         TextAlign = SKTextAlign.Center,
         IsAntialias = true,
         TextSize = HEADER_TEXT_SIZE,
+        Typeface = Catppuccin.Font
     };
 
     private readonly Button BackButton = new() {

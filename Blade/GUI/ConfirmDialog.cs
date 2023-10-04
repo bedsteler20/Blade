@@ -40,7 +40,8 @@ public class ConfirmDialog : Screen {
     private readonly SKPaint TextPaint = new() {
         IsAntialias = true,
         TextAlign = SKTextAlign.Center,
-        TextSize = 20
+        TextSize = 20,
+        Typeface = Catppuccin.Font
     };
     private readonly Button ConfirmButton;
     private readonly Button CancelButton;

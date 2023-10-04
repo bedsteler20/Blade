@@ -23,32 +23,33 @@ public class Cell : Blade.GameObject {
 
 
     private SKColor BackgroundColor => Value switch {
-        0 => CatppuccinMocha.Surface0,
-        2 => CatppuccinMocha.Yellow,
-        4 => CatppuccinMocha.Red,
-        8 => CatppuccinMocha.Green,
-        16 => CatppuccinMocha.Blue,
-        32 => CatppuccinMocha.Lavender,
-        64 => CatppuccinMocha.Peach,
-        128 => CatppuccinMocha.Sky,
-        256 => CatppuccinMocha.Maroon,
-        512 => CatppuccinMocha.Sapphire,
-        1024 => CatppuccinMocha.Pink,
-        2048 => CatppuccinMocha.Mauve,
-        _ => CatppuccinMocha.Rosewater
+        0 => Catppuccin.Surface0,
+        2 => Catppuccin.Yellow,
+        4 => Catppuccin.Red,
+        8 => Catppuccin.Green,
+        16 => Catppuccin.Blue,
+        32 => Catppuccin.Lavender,
+        64 => Catppuccin.Peach,
+        128 => Catppuccin.Sky,
+        256 => Catppuccin.Maroon,
+        512 => Catppuccin.Sapphire,
+        1024 => Catppuccin.Pink,
+        2048 => Catppuccin.Mauve,
+        _ => Catppuccin.Rosewater
     };
 
     private readonly SKPaint BackgroundPaint = new() {
-        Color = CatppuccinMocha.Empty,
+        Color = Catppuccin.Empty,
         Style = SKPaintStyle.Fill,
     };
 
     private static SKPaint TextPaint => new() {
-        Color = CatppuccinMocha.Surface0,
+        Color = Catppuccin.Surface0,
         Style = SKPaintStyle.Fill,
         TextAlign = SKTextAlign.Center,
         IsAntialias = true,
-        TextSize = TEXT_SIZE
+        TextSize = TEXT_SIZE,
+        Typeface = Catppuccin.Font
     };
 
     public Cell(int val) {

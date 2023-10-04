@@ -1,3 +1,9 @@
 {
-    "cSpell.words": ["Catppuccin", "Framebuffer", "Leaderboard", "Skia"]
+    "cSpell.words": [
+        "Catppuccin",
+        "Framebuffer",
+        "Leaderboard",
+        "Skia",
+        "Vsync"
+    ]
 }

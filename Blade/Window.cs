@@ -63,7 +63,7 @@ public class Window : GameWindow {
 
     protected override void OnRenderFrame(FrameEventArgs args) {
         base.OnRenderFrame(args);
-        canvas.Clear(CatppuccinMocha.Base);
+        canvas.Clear(Catppuccin.Base);
         ScreenManager.CurrentScreen.Draw(canvas, 0, 0);
         canvas.Flush();
         SwapBuffers();
