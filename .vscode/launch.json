@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "dotnet: build",
-            "program": "${workspaceFolder}/Example/bin/Debug/net7.0/Example.dll",
+            "program": "${workspaceFolder}/SharpGames/bin/Debug/net7.0/SharpGames.dll",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
             "env": {

@@ -3,19 +3,18 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkiaSharp;
 using Blade.Colors;
 using Blade.Extensions;
-namespace Example.NumberGame;
-public class Game : Blade.Screen {
+namespace SharpGames.NumberGame;
 
+public class Game : Blade.GameScreen {
     private const int BOARD_SIZE = 4;
     private const int CELL_PADDING = 10;
-
     public const int WIDTH = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
     public const int HEIGHT = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
 
-    private readonly Cell[][] Cells;
     private readonly Random Rng = new();
     private (int x, int y) PreviousSpawnLocation = (-1, -1);
 
+    private readonly Cell[][] Cells;
     private int score = 0;
 
     public Game() {
@@ -30,8 +29,8 @@ public class Game : Blade.Screen {
         SpawnCell();
     }
 
-    private static SKPaint scorePaint = new() {
-        Color = Catppuccin.Text,
+    private static readonly SKPaint scorePaint = new() {
+        Color = CatppuccinMocha.Text,
         IsAntialias = true,
         TextSize = 32
     };
@@ -68,7 +67,7 @@ public class Game : Blade.Screen {
                 AfterMove();
                 break;
             case Keys.Escape:
-                // Blade.ScreenManager.Back<Menu>();
+                OnExit();
                 break;
             default:
                 break;
@@ -78,26 +77,14 @@ public class Game : Blade.Screen {
 
     public void AfterMove() {
         if (!HasEmptyCell()) {
-            ExitGame();
+            OnGameOver(score);
         } else {
             SpawnCell();
         }
     }
 
-    public void ExitGame() {
-        // Blade.ScreenManager.AddScreen(new Blade.TextBox() {
-        //     Title = "Game Over",
-        //     BackgroundColor = ConsoleColor.Red,
-        //     OnSubmit = (sender, text) => {
-        //         Leaderboard.AddScore(text, score);
-        //         Leaderboard.Save();
-        //         Blade.ScreenManager.Back<Menu>();
-        //     },
-        //     OnCancel = () => Blade.ScreenManager.Back<Menu>(),
-        // });
-    }
 
-
+    // Black magic do not touch
     public void MoveUp() {
         bool tryAgain = false;
 
@@ -132,6 +119,7 @@ public class Game : Blade.Screen {
         }
     }
 
+    // Black magic do not touch
     public void MoveDown() {
         bool tryAgain = false;
         for (int y = 0; y < BOARD_SIZE; y++) {
@@ -164,6 +152,8 @@ public class Game : Blade.Screen {
             MoveDown();
         }
     }
+
+    // Black magic do not touch
     public void MoveLeft() {
         bool tryAgain = false;
 
@@ -198,6 +188,8 @@ public class Game : Blade.Screen {
             MoveLeft();
         }
     }
+
+    // Black magic do not touch
     public void MoveRight() {
         bool tryAgain = false;
 
@@ -280,79 +272,5 @@ public class Game : Blade.Screen {
         return false;
     }
 
-}
-
-public class Cell : Blade.GameObject {
-    public const int SIZE = 100;
-    private const int TEXT_HEIGHT = 60;
-    private const int TEXT_SIZE = 32;
-    private const int BORDER_RADIUS = 10;
-    private int _value;
-
-    public int Value {
-        get => _value;
-        set {
-            _value = value;
-            BackgroundPaint.Color = BackgroundColor;
-        }
-    }
-
-    protected override SKRect OnGetBounds() {
-        return new(SIZE, 0, SIZE, 0);
-    }
-
-
-    private SKColor BackgroundColor => Value switch {
-        0 => Catppuccin.Surface0,
-        2 => Catppuccin.Yellow,
-        4 => Catppuccin.Red,
-        8 => Catppuccin.Green,
-        16 => Catppuccin.Blue,
-        32 => Catppuccin.Lavender,
-        64 => Catppuccin.Peach,
-        128 => Catppuccin.Sky,
-        256 => Catppuccin.Maroon,
-        512 => Catppuccin.Sapphire,
-        1024 => Catppuccin.Pink,
-        2048 => Catppuccin.Mauve,
-        _ => Catppuccin.Rosewater
-    };
-
-    private readonly SKPaint BackgroundPaint = new() {
-        Color = Catppuccin.Empty,
-        Style = SKPaintStyle.Fill,
-    };
-
-    private static SKPaint TextPaint => new() {
-        Color = Catppuccin.Surface0,
-        Style = SKPaintStyle.Fill,
-        TextAlign = SKTextAlign.Center,
-        IsAntialias = true,
-        TextSize = TEXT_SIZE
-    };
-
-    public Cell(int val) {
-        Value = val;
-    }
-
-    protected override void Dispose(bool disposing) {
-        TextPaint.Dispose();
-        BackgroundPaint.Dispose();
-        base.Dispose(disposing);
-    }
-
-    protected override void OnDraw(SKCanvas canvas) {
-        base.OnDraw(canvas);
-        canvas.DrawRoundRect(0, 0, SIZE, SIZE, BORDER_RADIUS, BORDER_RADIUS, BackgroundPaint);
-        canvas.DrawText(Value.ToString(), 50, TEXT_HEIGHT, TextPaint);
-
-    }
-
-    public bool CanMerge(Cell other) {
-        if (Value == 0 || other.Value == 0) {
-            return true;
-        }
-        return Value == other.Value;
-    }
 }
 

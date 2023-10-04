@@ -1,8 +1,9 @@
 namespace Blade.Colors;
 using SkiaSharp;
 
-public struct Catppuccin {
-    public static SKColor Empty => SKColor.Empty;
+public struct CatppuccinMocha {
+    private static readonly SKColor empty = SKColor.Empty;
+    public static SKColor Empty = empty;
     public static SKColor Rosewater => new(0xfff5e0dc);
     public static SKColor Flamingo => new(0xfff2cdcd);
     public static SKColor Pink => new(0xfff5c2e7);

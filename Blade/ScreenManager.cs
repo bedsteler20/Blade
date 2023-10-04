@@ -11,6 +11,7 @@ public static class ScreenManager {
     /// </summary>
     public static Screen CurrentScreen => screens.Peek();
 
+    public static int Count => screens.Count;
 
     /// <summary>
     /// Adds a screen to the top of the screen stack.
@@ -29,11 +30,11 @@ public static class ScreenManager {
     }
 
     /// <summary>
-    /// Navigates back to the previous screen of type T in the screen stack.
+    /// Navigates back to the screen with the specified name.
     /// </summary>
-    /// <typeparam name="T">The type of the screen to navigate back to.</typeparam>
-    public static void Back<T>() {
-        while (CurrentScreen.GetType() != typeof(T)) {
+    /// <param name="name">The name of the screen to navigate back to.</param>
+    public static void Back(string name) {
+        while (CurrentScreen is not null && CurrentScreen.Route != name) {
             Back();
         }
     }

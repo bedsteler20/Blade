@@ -18,8 +18,6 @@ public class Window : GameWindow {
     public int Width => ClientSize.X;
     public int Height => ClientSize.Y;
 
-    private static bool runGcAfterFrame = Utils.GetEnv("BLADE_GC_AFTER_FRAME", true);
-
     public Window(string title, int width, int height) : base(new GameWindowSettings {
         UpdateFrequency = 60
     },
@@ -65,7 +63,7 @@ public class Window : GameWindow {
 
     protected override void OnRenderFrame(FrameEventArgs args) {
         base.OnRenderFrame(args);
-        canvas.Clear(Catppuccin.Base);
+        canvas.Clear(CatppuccinMocha.Base);
         ScreenManager.CurrentScreen.Draw(canvas, 0, 0);
         canvas.Flush();
         SwapBuffers();
