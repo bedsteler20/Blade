@@ -5,6 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets/Sounds/" />
     <Folder Include="NumberGame/" />
   </ItemGroup>
 
@@ -14,5 +15,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+    <ItemGroup>
+        <Content Include="Assets/Sounds/*.ogg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 </Project>

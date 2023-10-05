@@ -19,7 +19,7 @@ public class Window : GameWindow {
     public int Height => ClientSize.Y;
 
     public Window(string title, int width, int height) : base(new GameWindowSettings {
-        UpdateFrequency = 60
+        UpdateFrequency = EngineFlags.FrameRate
     },
      new NativeWindowSettings {
          Title = title,

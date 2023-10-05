@@ -3,15 +3,16 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkiaSharp;
 using Blade.Colors;
 using Blade.Extensions;
+using Blade;
 namespace SharpGames.NumberGame;
 
-public class Game : Blade.GameScreen {
+public class Game : GameScreen {
     private const int BOARD_SIZE = 4;
     private const int CELL_PADDING = 10;
-    public const int WIDTH = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
-    public const int HEIGHT = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
-
-    private readonly Random Rng = new();
+    private const int WIDTH = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
+    private const int HEIGHT = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
+    
+    private readonly Random Rng = Utils.CreateRadom();
     private (int x, int y) PreviousSpawnLocation = (-1, -1);
 
     private readonly Cell[][] Cells;

@@ -14,7 +14,7 @@
         <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.18" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="Assets/Colors/*.json">
+        <Content Include="Assets/Themes/*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Assets/Fonts/*.ttf">

@@ -9,6 +9,20 @@ public static class Utils {
         }
         return Path.Combine(appDir, file);
     }
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="Random"/> class with a seed value specified by the "BLADE_RANDOM_SEED" environment variable, if it exists.
+    /// If the environment variable is not set, a new instance of the <see cref="Random"/> class is created with a seed value based on the current time.
+    /// </summary>
+    /// <returns>A new instance of the <see cref="Random"/> class.</returns>
+    public static Random CreateRadom() {
+        var seed = EngineFlags.RandomSeed;
+        if (seed == -1) {
+            return new Random();
+        } else {
+            return new Random(seed);
+        }
+    }
 }
 
 public static class EngineFlags {
@@ -18,6 +32,7 @@ public static class EngineFlags {
     public static string Theme { get; set; } = GetVar("THEME", "Mocha");
     public static bool UseSystemFont { get; set; } = GetVar("USE_SYSTEM_FONT", false);
     public static string Font { get; set; } = GetVar("FONT", "ComicMono");
+    public static int RandomSeed { get; set; } = GetVar("RANDOM_SEED", -1);
 
     private static bool GetVar(string name, bool defaultValue = false) {
         var value = Environment.GetEnvironmentVariable("BLADE_" + name);

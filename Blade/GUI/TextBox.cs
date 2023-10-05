@@ -1,5 +1,7 @@
 using Blade.Colors;
 using Blade.Extensions;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkiaSharp;
 
 namespace Blade.GUI;
@@ -45,11 +47,16 @@ public class TextBox : Screen {
             _focus = value;
             CancelButton.IsFocused = false;
             SubmitButton.IsFocused = false;
+            TextPaint.Color = Catppuccin.Surface1;
+            EntryBackgroundPaint.Color = Catppuccin.Overlay1;
 
             if (value == Focus.Submit) {
                 SubmitButton.IsFocused = true;
             } else if (value == Focus.Cancel) {
                 CancelButton.IsFocused = true;
+            } else {
+                EntryTextPaint.Color = Catppuccin.Text;
+                EntryBackgroundPaint.Color = Catppuccin.Surface1;
             }
         }
     }
@@ -80,6 +87,7 @@ public class TextBox : Screen {
     private readonly SKPaint TextPaint = new() {
         IsAntialias = true,
         TextAlign = SKTextAlign.Center,
+        Color = Catppuccin.Surface1,
         TextSize = 20,
         Typeface = Catppuccin.Font
     };
@@ -88,9 +96,17 @@ public class TextBox : Screen {
         Color = Catppuccin.Overlay1
     };
 
+    private readonly SKPaint EntryTextPaint = new() {
+        IsAntialias = true,
+        TextAlign = SKTextAlign.Center,
+        Color = Catppuccin.Text,
+        TextSize = 20,
+        Typeface = Catppuccin.Font
+    };
+
     private readonly Button SubmitButton;
     private readonly Button CancelButton;
-    private string Text = "UwU OwO";
+    private string Text = "";
 
     public TextBox() {
         SubmitButton = new Button() {
@@ -108,6 +124,7 @@ public class TextBox : Screen {
             Height = BUTTON_HEIGHT,
 
         };
+        Focus = Focus.Text;
         Children.Add(CancelButton);
         Children.Add(SubmitButton);
     }
@@ -118,15 +135,66 @@ public class TextBox : Screen {
         canvas.DrawText(Title, WIDTH / 2, PADDING + TITLE_SIZE, TextPaint);
         canvas.Translate(PADDING, PADDING + TITLE_SIZE + PADDING);
         canvas.DrawRect(0, 0, ENTRY_WIDTH, ENTRY_HEIGHT, EntryBackgroundPaint);
-        canvas.DrawText(Text, ENTRY_WIDTH / 2, ENTRY_HEIGHT - ENTRY_PADDING, TextPaint);
+        canvas.DrawText(Text, ENTRY_WIDTH / 2, ENTRY_HEIGHT - ENTRY_PADDING, EntryTextPaint);
         canvas.Translate(0, ENTRY_HEIGHT + ENTRY_PADDING + BUTTON_MARGIN);
-        const int center = ((WIDTH) / 2) - ((BUTTON_WIDTH + BUTTON_PADDING + BUTTON_WIDTH) / 2) - PADDING;
+        const int center = (WIDTH / 2) - ((BUTTON_WIDTH + BUTTON_PADDING + BUTTON_WIDTH) / 2) - PADDING;
         canvas.Translate(center, 0);
         canvas.DrawDrawable(SubmitButton, 0, 0);
         canvas.Translate(BUTTON_WIDTH + BUTTON_PADDING, 0);
         canvas.DrawDrawable(CancelButton, 0, 0);
     }
 
+    public override void OnKeyDown(KeyboardKeyEventArgs e) {
+        base.OnKeyDown(e);
+
+        switch (e.Key) {
+            case Keys.Up:
+                if (Focus != Focus.Text) {
+                    Focus = Focus.Text;
+                }
+                break;
+            case Keys.Down:
+                if (Focus == Focus.Text) {
+                    Focus = Focus.Submit;
+                }
+                break;
+            case Keys.Right:
+                if (Focus == Focus.Submit) {
+                    Focus = Focus.Cancel;
+                }
+                break;
+            case Keys.Left:
+                if (Focus == Focus.Cancel) {
+                    Focus = Focus.Submit;
+                }
+                break;
+            case Keys.Enter:
+                if (Focus == Focus.Submit) {
+                    OnSubmit(Text);
+                } else if (Focus == Focus.Cancel) {
+                    OnCancel();
+                }
+                break;
+            case Keys.Escape:
+                OnCancel();
+                break;
+            case Keys.Backspace:
+                if (Text.Length > 0) {
+                    Text = Text[..^1];
+                }
+                break;
+            default:
+                if (e.Key.IsPrintable()) {
+                    if (Text.Length > 15) break;
+                    if (e.Shift) {
+                        Text += e.Key.ToString();
+                    } else {
+                        Text += e.Key.ToString().ToLower();
+                    }
+                }
+                break;
+        }
+    }
 
 
 }

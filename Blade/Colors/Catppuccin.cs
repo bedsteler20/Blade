@@ -35,9 +35,9 @@ public class Catppuccin {
     public static SKTypeface Font;
 
     public static void Initialize() {
-        var themePath = Assets.GetPath("Colors", EngineFlags.Theme + ".json");
+        var themePath = Assets.GetPath("Themes", EngineFlags.Theme + ".json");
         if (!File.Exists(themePath)) {
-            themePath = Assets.GetPath("Colors", "Mocha.json");
+            themePath = Assets.GetPath("Themes", "Mocha.json");
         }
         var theme = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(themePath));
         Rosewater = SKColor.Parse(theme["Rosewater"]);

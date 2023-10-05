@@ -28,13 +28,6 @@ public class Table : Screen {
         get => BackgroundPaint.Color;
         init => BackgroundPaint.Color = value;
     }
-    public required SKColor BodyTextColor {
-        get => TextPaintL.Color;
-        init {
-            TextPaintL.Color = value;
-            TextPaintR.Color = value;
-        }
-    }
     public required SKColor HeaderTextColor {
         get => HeaderPaint.Color;
         init => HeaderPaint.Color = value;
@@ -55,14 +48,16 @@ public class Table : Screen {
         TextAlign = SKTextAlign.Left,
         IsAntialias = true,
         TextSize = TEXT_SIZE,
-        Typeface = Catppuccin.Font
+        Typeface = Catppuccin.Font,
+        Color = Catppuccin.Text
     };
 
     private readonly SKPaint TextPaintR = new() {
         TextAlign = SKTextAlign.Right,
         IsAntialias = true,
         TextSize = TEXT_SIZE,
-        Typeface = Catppuccin.Font
+        Typeface = Catppuccin.Font,
+        Color = Catppuccin.Text
     };
 
     private readonly SKPaint HeaderPaint = new() {
