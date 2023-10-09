@@ -1,6 +1,7 @@
 using Blade;
 using Blade.Colors;
 using Blade.Extensions;
+using LibVLCSharp.Shared;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkiaSharp;
@@ -9,16 +10,17 @@ namespace SharpGames.Tetras;
 
 public class Game : GameScreen {
     private const int BOARD_WIDTH = 18;
-    private const int BORD_HEIGHT = 28;
+    private const int BOARD_HEIGHT = 28;
     private const int CELL_SIZE = 20;
     private const int WIDTH = BOARD_WIDTH * (CELL_SIZE - 1);
-    private const int HEIGHT = BORD_HEIGHT * CELL_SIZE;
+    private const int HEIGHT = BOARD_HEIGHT * CELL_SIZE;
 
     private readonly Random rng = Utils.CreateRadom();
 
-    private PieceType[,] board = new PieceType[BOARD_WIDTH, BORD_HEIGHT];
+    private PieceType[,] board = new PieceType[BOARD_WIDTH, BOARD_HEIGHT];
     private PieceType[,] piece = new PieceType[4, 4];
     private Blade.Timeout timeout;
+    private MediaPlayer? player;
     private (int x, int y) piecePos = (4, 2);
     private int score = 0;
 
@@ -46,6 +48,7 @@ public class Game : GameScreen {
 
     protected override void Setup() {
         base.Setup();
+        player = Audio.Instance.Play("Tetris.ogg", true);
         SpawnPiece();
         Children.Add(timeout);
     }
@@ -89,7 +92,47 @@ public class Game : GameScreen {
                     piece = Rotate(piece);
                 }
                 break;
+            case Keys.Space:
+                if (CanRotate()) {
+                    piece = Rotate(piece);
+                }
+                break;
+            case Keys.Enter:
+                while (CanMove(0, 1)) Drop();
+                break;
             case Keys.Escape:
+                OnExit();
+                break;
+        }
+    }
+
+    public override void OnJoystickButtonPressed(XInputMapping button) {
+        base.OnJoystickButtonPressed(button);
+        switch (button) {
+            case XInputMapping.UpDPad:
+                if (CanRotate()) {
+                    piece = Rotate(piece);
+                }
+                break;
+            case XInputMapping.DownDPad:
+                if (CanMove(0, 1)) {
+                    piecePos.y++;
+                }
+                break;
+            case XInputMapping.LeftDPad:
+                if (CanMove(-1, 0)) {
+                    piecePos.x--;
+                }
+                break;
+            case XInputMapping.RightDPad:
+                if (CanMove(1, 0)) {
+                    piecePos.x++;
+                }
+                break;
+            case XInputMapping.A:
+                while (CanMove(0, 1)) Drop();
+                break;
+            case XInputMapping.B:
                 OnExit();
                 break;
         }
@@ -99,7 +142,7 @@ public class Game : GameScreen {
         base.Update();
         int lines = 0;
         // Check for full rows
-        for (int y = 0; y < BORD_HEIGHT; y++) {
+        for (int y = 0; y < BOARD_HEIGHT; y++) {
             var full = true;
             for (int x = 1; x < BOARD_WIDTH; x++) {
                 if (board[x, y] == PieceType.E) {
@@ -142,7 +185,7 @@ public class Game : GameScreen {
         base.OnDraw(canvas);
         canvas.CenterScreen(WIDTH, HEIGHT);
         canvas.Translate(-CELL_SIZE, 0);
-        for (int y = 0; y < BORD_HEIGHT; y++) {
+        for (int y = 0; y < BOARD_HEIGHT; y++) {
             for (int x = 0; x < BOARD_WIDTH; x++) {
                 if (board[x, y] == PieceType.E) {
                     continue;
@@ -184,7 +227,7 @@ public class Game : GameScreen {
                 }
                 var nx = piecePos.x + px + x;
                 var ny = piecePos.y + py + y;
-                if (nx < 1 || nx >= BOARD_WIDTH || ny < 0 || ny >= BORD_HEIGHT) {
+                if (nx < 1 || nx >= BOARD_WIDTH || ny < 0 || ny >= BOARD_HEIGHT) {
                     return false;
                 }
                 if (board[nx, ny] != PieceType.E) {
@@ -204,7 +247,7 @@ public class Game : GameScreen {
                 }
                 var nx = piecePos.x + px;
                 var ny = piecePos.y + py;
-                if (nx < 1 || nx >= BOARD_WIDTH || ny < 0 || ny >= BORD_HEIGHT) {
+                if (nx < 1 || nx >= BOARD_WIDTH || ny < 0 || ny >= BOARD_HEIGHT) {
                     return false;
                 }
                 if (board[nx, ny] != PieceType.E) {
@@ -225,6 +268,14 @@ public class Game : GameScreen {
         return rotated;
     }
 
+    protected override void Dispose(bool disposing) {
+        base.Dispose(disposing);
+        player?.Stop();
+        player?.Dispose();
+        ScorePaint.Dispose();
+        BorderPaint.Dispose();
+        BlockPaint.Dispose();
+    }
 
 
 }

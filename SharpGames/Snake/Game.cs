@@ -76,6 +76,29 @@ public class Game : GameScreen {
         }
     }
 
+    public override void OnJoystickButtonPressed(XInputMapping button) {
+        base.OnJoystickButtonPressed(button);
+        switch (button) {
+            case XInputMapping.UpDPad:
+                Direction = Direction.Up;
+                break;
+            case XInputMapping.DownDPad:
+                Direction = Direction.Down;
+                break;
+            case XInputMapping.LeftDPad:
+                Direction = Direction.Left;
+                break;
+            case XInputMapping.RightDPad:
+                Direction = Direction.Right;
+                break;
+            case XInputMapping.B:
+                OnExit();
+                break;
+            default:
+                break;
+        }
+    }
+
     private void Move() {
         (int x, int y) next = Direction switch {
             Direction.Up => (SnakeHead.x, SnakeHead.y - 1),

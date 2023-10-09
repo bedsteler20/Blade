@@ -134,33 +134,62 @@ public class Game : GameScreen {
         BallPosition.y += BallVelocity.y;
     }
 
+    private void InputRight(bool fast) {
+        if (PaddlePosition.x < WIDTH - PADDLE_WIDTH + 1) {
+            if (fast && PaddlePosition.x < WIDTH - PADDLE_WIDTH + 2) {
+                PaddlePosition.x += 10;
+            } else {
+                PaddlePosition.x += 5;
+            }
+        }
+    }
+
+    private void InputLeft(bool fast) {
+        if (PaddlePosition.x > 1) {
+            if (fast && PaddlePosition.x > 2) {
+                PaddlePosition.x -= 10;
+            } else {
+                PaddlePosition.x -= 5;
+            }
+        }
+    }
+
     public override void OnKeyDown(KeyboardKeyEventArgs e) {
         base.OnKeyDown(e);
         switch (e.Key) {
             case Keys.Left:
-                if (PaddlePosition.x > 1) {
-                    if (e.Shift && PaddlePosition.x > 2) {
-                        PaddlePosition.x -= 10;
-                    } else {
-                        PaddlePosition.x -= 5;
-
-                    }
-                }
+                InputLeft(e.Shift);
                 break;
             case Keys.Right:
-                if (PaddlePosition.x < WIDTH - PADDLE_WIDTH + 1) {
-                    if (e.Shift && PaddlePosition.x < WIDTH - PADDLE_WIDTH + 2) {
-                        PaddlePosition.x += 10;
-                    } else {
-                        PaddlePosition.x += 5;
-                    }
-                }
+                InputRight(e.Shift);
                 break;
             case Keys.Escape:
                 OnExit();
                 break;
         }
     }
+
+    public override void OnJoystickButtonDown(XInputMapping button) {
+        base.OnJoystickButtonDown(button);
+        switch (button) {
+            case XInputMapping.LeftDPad:
+                InputLeft(false);
+                break;
+            case XInputMapping.RightDPad:
+                InputRight(false);
+                break;
+            case XInputMapping.LeftBumper:
+                InputLeft(true);
+                break;
+            case XInputMapping.RightBumper:
+                InputRight(true);
+                break;
+            case XInputMapping.Start:
+                OnExit();
+                break;
+        }
+    }
+
 
     protected override void OnDraw(SKCanvas canvas) {
         base.OnDraw(canvas);

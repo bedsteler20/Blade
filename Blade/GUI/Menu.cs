@@ -80,4 +80,22 @@ public class Menu : Screen {
                 break;
         }
     }
+
+    public override void OnJoystickButtonPressed(XInputMapping button) {
+        base.OnJoystickButtonPressed(button);
+        switch (button) {
+            case XInputMapping.UpDPad:
+                SelectedIndex--;
+                break;
+            case XInputMapping.DownDPad:
+                SelectedIndex++;
+                break;
+            case XInputMapping.A:
+                Buttons[SelectedIndex].Activate();
+                break;
+            case XInputMapping.B:
+                if (ScreenManager.Count > 1) ScreenManager.Back();
+                break;
+        }
+    }
 }

@@ -43,8 +43,8 @@ class Program {
                             TextColor = textColor,
                             CancelAction = () => ScreenManager.Back($"/{routePrefix}"),
                             ConfirmAction = () => ScreenManager.Back($"/{routePrefix}/game"),
-                            ConfirmText = "Yes",
-                            CancelText = "No"
+                            ConfirmText = "No",
+                            CancelText = "Yes"
                         }),
                     }),
                 },
@@ -67,6 +67,7 @@ class Program {
     }
 
     public static void Main() {
+        Audio.Initialize();
         Catppuccin.Initialize();
         var numberGameLeaderboard = new Leaderboard("2048");
         var snakeLeaderboard = new Leaderboard("Snake");

@@ -19,4 +19,7 @@ public class GameObject : SKDrawable {
     }
 
     protected virtual void Setup() { }
+
+    public virtual void OnJoystickButtonDown(XInputMapping button) { }
+    public virtual void OnJoystickButtonPressed(XInputMapping button) { }
 }

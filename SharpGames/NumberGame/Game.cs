@@ -11,7 +11,7 @@ public class Game : GameScreen {
     private const int CELL_PADDING = 10;
     private const int WIDTH = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
     private const int HEIGHT = BOARD_SIZE * Cell.SIZE + (BOARD_SIZE - 1) * CELL_PADDING;
-    
+
     private readonly Random Rng = Utils.CreateRadom();
     private (int x, int y) PreviousSpawnLocation = (-1, -1);
 
@@ -74,7 +74,33 @@ public class Game : GameScreen {
             default:
                 break;
         }
+    }
 
+    public override void OnJoystickButtonPressed(XInputMapping button) {
+        base.OnJoystickButtonPressed(button);
+        switch (button) {
+            case XInputMapping.UpDPad:
+                MoveUp();
+                AfterMove();
+                break;
+            case XInputMapping.DownDPad:
+                MoveDown();
+                AfterMove();
+                break;
+            case XInputMapping.LeftDPad:
+                MoveLeft();
+                AfterMove();
+                break;
+            case XInputMapping.RightDPad:
+                MoveRight();
+                AfterMove();
+                break;
+            case XInputMapping.Start:
+                OnExit();
+                break;
+            default:
+                break;
+        }
     }
 
     public void AfterMove() {

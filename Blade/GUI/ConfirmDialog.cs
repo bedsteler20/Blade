@@ -9,9 +9,10 @@ namespace Blade.GUI;
 public class ConfirmDialog : Screen {
     private const int BUTTON_WIDTH = 100;
     private const int BUTTON_HEIGHT = 30;
-    private const int BUTTON_MARGIN = 10;
-    private const int TEXT_SIZE = 20;
-    private const int PADDING = 10;
+    private const int BUTTON_MARGIN = 12;
+    private const int BOARDER_RADIUS = 8;
+    private const int TEXT_SIZE = 24;
+    private const int PADDING = 12;
     private const int WIDTH = PADDING + BUTTON_WIDTH + BUTTON_MARGIN + BUTTON_WIDTH + PADDING;
     private const int HEIGHT = PADDING + BUTTON_HEIGHT + BUTTON_MARGIN + TEXT_SIZE + PADDING;
 
@@ -40,7 +41,7 @@ public class ConfirmDialog : Screen {
     private readonly SKPaint TextPaint = new() {
         IsAntialias = true,
         TextAlign = SKTextAlign.Center,
-        TextSize = 20,
+        TextSize = TEXT_SIZE,
         Typeface = Catppuccin.Font
     };
     private readonly Button ConfirmButton;
@@ -81,13 +82,30 @@ public class ConfirmDialog : Screen {
         }
     }
 
+    public override void OnJoystickButtonPressed(XInputMapping button) {
+        base.OnJoystickButtonPressed(button);
+        if (button == XInputMapping.RightDPad || button == XInputMapping.LeftDPad) {
+            ConfirmButton.IsFocused = !ConfirmButton.IsFocused;
+            CancelButton.IsFocused = !CancelButton.IsFocused;
+        } else if (button == XInputMapping.A) {
+            if (ConfirmButton.IsFocused) {
+                ConfirmAction();
+            } else {
+                CancelAction();
+            }
+        } else if (button == XInputMapping.B) {
+            CancelAction();
+        }
+    }
+
     protected override void OnDraw(SKCanvas canvas) {
         base.OnDraw(canvas);
         canvas.CenterScreen(WIDTH, HEIGHT);
-        canvas.DrawRect(0, 0, WIDTH, HEIGHT, BackgroundPaint);
+        canvas.DrawRoundRect(0, 0, WIDTH, HEIGHT, BOARDER_RADIUS, BOARDER_RADIUS, BackgroundPaint);
+        canvas.DrawText(Message, WIDTH / 2, PADDING + TEXT_SIZE, TextPaint);
+        canvas.Translate(0, BUTTON_MARGIN + TEXT_SIZE);
         canvas.DrawDrawable(ConfirmButton, PADDING, PADDING);
         canvas.DrawDrawable(CancelButton, PADDING + BUTTON_WIDTH + BUTTON_MARGIN, PADDING);
-        canvas.DrawText(Message, WIDTH / 2, PADDING + BUTTON_HEIGHT + BUTTON_MARGIN + TEXT_SIZE, TextPaint);
     }
 
     protected override void Dispose(bool disposing) {

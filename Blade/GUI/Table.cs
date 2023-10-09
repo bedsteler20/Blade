@@ -83,6 +83,13 @@ public class Table : Screen {
         }
     }
 
+    public override void OnJoystickButtonPressed(XInputMapping button) {
+        base.OnJoystickButtonPressed(button);
+        if (button == XInputMapping.B || button == XInputMapping.A) {
+            ScreenManager.Back();
+        }
+    }
+
     protected override void OnDraw(SKCanvas canvas) {
         base.OnDraw(canvas);
         canvas.CenterScreen(WIDTH, HEIGHT);

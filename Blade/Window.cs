@@ -3,6 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkiaSharp;
 
 namespace Blade;
@@ -15,6 +16,9 @@ public class Window : GameWindow {
 
     public static Window CurrentWindow { get; private set; }
 
+    private int minHeight;
+    private int minWidth;
+
     public int Width => ClientSize.X;
     public int Height => ClientSize.Y;
 
@@ -26,11 +30,14 @@ public class Window : GameWindow {
          Flags = ContextFlags.ForwardCompatible | ContextFlags.Debug,
          Profile = ContextProfile.Core,
          StartFocused = true,
-         WindowBorder = WindowBorder.Fixed,
-         Size = new Vector2i(width, height)
+         WindowBorder = WindowBorder.Resizable,
+         Size = new Vector2i(width, height),
+         MinimumSize = new Vector2i(width, height)
      }) {
         VSync = VSyncMode.Off;
         CurrentWindow = this;
+        minWidth = width;
+        minHeight = height;
     }
 
     protected override void OnLoad() {
@@ -51,9 +58,39 @@ public class Window : GameWindow {
         base.OnUnload();
     }
 
+    protected override void OnResize(ResizeEventArgs e) {
+        base.OnResize(e);
+        renderTarget.Dispose();
+        surface.Dispose();
+        canvas.Dispose();
+        renderTarget = new GRBackendRenderTarget(ClientSize.X, ClientSize.Y, 0, 8, new GRGlFramebufferInfo(0, (uint)SizedInternalFormat.Rgba8));
+        surface = SKSurface.Create(grContext, renderTarget, GRSurfaceOrigin.BottomLeft, SKColorType.Rgba8888);
+        canvas = surface.Canvas;
+    }
+
+    protected override void OnJoystickConnected(JoystickEventArgs e) {
+        base.OnJoystickConnected(e);
+    }
+
     protected override void OnUpdateFrame(FrameEventArgs args) {
         base.OnUpdateFrame(args);
+        JoystickInput();
         ScreenManager.CurrentScreen.Update();
+    }
+
+    private void JoystickInput() {
+        foreach (var joystick in JoystickStates) {
+            foreach (XInputMapping mapping in Enum.GetValues(typeof(XInputMapping))) {
+                if (joystick == null) continue;
+                if (joystick.IsButtonDown((int)mapping)) {
+                    ScreenManager.CurrentScreen.OnJoystickButtonDown(mapping);
+                }
+                if (joystick.IsButtonPressed((int)mapping)) {
+                    ScreenManager.CurrentScreen.OnJoystickButtonPressed(mapping);
+                }
+            }
+
+        }
     }
 
     protected override void OnKeyDown(KeyboardKeyEventArgs e) {

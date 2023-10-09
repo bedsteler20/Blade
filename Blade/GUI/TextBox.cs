@@ -196,5 +196,45 @@ public class TextBox : Screen {
         }
     }
 
+    public override void OnJoystickButtonPressed(XInputMapping button) {
+        base.OnJoystickButtonPressed(button);
+        switch (button) {
+            case XInputMapping.UpDPad:
+                if (Focus != Focus.Text) {
+                    Focus = Focus.Text;
+                }
+                break;
+            case XInputMapping.DownDPad:
+                if (Focus == Focus.Text) {
+                    Focus = Focus.Submit;
+                }
+                break;
+            case XInputMapping.RightDPad:
+                if (Focus == Focus.Submit) {
+                    Focus = Focus.Cancel;
+                }
+                break;
+            case XInputMapping.LeftDPad:
+                if (Focus == Focus.Cancel) {
+                    Focus = Focus.Submit;
+                }
+                break;
+            case XInputMapping.A:
+                if (Focus == Focus.Submit) {
+                    OnSubmit(Text);
+                } else if (Focus == Focus.Cancel) {
+                    OnCancel();
+                }
+                break;
+            case XInputMapping.B:
+                OnCancel();
+                break;
+            case XInputMapping.X:
+                if (Text.Length > 0) {
+                    Text = Text[..^1];
+                }
+                break; 
+        }
+    }
 
 }
