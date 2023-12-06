@@ -1,3 +1,5 @@
+The full source code for Blade can be found [hear](https://github.com/bedsteler20/Blade)
+
 
 ## Games and Controls
 ### General
