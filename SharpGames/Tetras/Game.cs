@@ -1,26 +1,23 @@
-using Blade;
 using Blade.Colors;
 using Blade.Extensions;
-using LibVLCSharp.Shared;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkiaSharp;
 
 namespace SharpGames.Tetras;
 
-public class Game : GameScreen {
+public class Game : Blade.GameScreen {
     private const int BOARD_WIDTH = 18;
     private const int BOARD_HEIGHT = 28;
     private const int CELL_SIZE = 20;
     private const int WIDTH = BOARD_WIDTH * (CELL_SIZE - 1);
     private const int HEIGHT = BOARD_HEIGHT * CELL_SIZE;
 
-    private readonly Random rng = Utils.CreateRadom();
+    private readonly Random rng = Blade.Utils.CreateRadom();
 
     private PieceType[,] board = new PieceType[BOARD_WIDTH, BOARD_HEIGHT];
     private PieceType[,] piece = new PieceType[4, 4];
     private Blade.Timeout timeout;
-    private MediaPlayer? player;
     private (int x, int y) piecePos = (4, 2);
     private int score = 0;
 
@@ -48,7 +45,6 @@ public class Game : GameScreen {
 
     protected override void Setup() {
         base.Setup();
-        player = Audio.Instance.Play("Tetris.ogg", true);
         SpawnPiece();
         Children.Add(timeout);
     }
@@ -270,8 +266,6 @@ public class Game : GameScreen {
 
     protected override void Dispose(bool disposing) {
         base.Dispose(disposing);
-        player?.Stop();
-        player?.Dispose();
         ScorePaint.Dispose();
         BorderPaint.Dispose();
         BlockPaint.Dispose();

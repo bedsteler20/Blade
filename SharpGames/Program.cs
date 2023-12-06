@@ -67,7 +67,6 @@ class Program {
     }
 
     public static void Main() {
-        Audio.Initialize();
         Catppuccin.Initialize();
         var numberGameLeaderboard = new Leaderboard("2048");
         var snakeLeaderboard = new Leaderboard("Snake");
