@@ -1,0 +1,14 @@
+id: dev.bedsteler20.SharpGames
+sdk: org.freedesktop.Sdk
+runtime: org.freedesktop.Platform
+runtime-version: "22.08"
+command: SharpGames
+
+modules:
+  - name: SharpGames
+    buildsystem: simple
+    sources:
+      - type: dir
+        path: .
+    build-commands:
+      - cp -r --remove-destination ./bin/Release/net7.0/linux-x64 /app/bin
